@@ -42,8 +42,9 @@ case "${1:-help}" in
     echo "tests/test_app.py now has a failing assertion. Commit and push to see the pipeline stop."
     ;;
   fix-test)
-    git -C "$ROOT" checkout -- tests/test_app.py
-    echo "tests/test_app.py restored."
+    sed -i.bak 's/assert body\["status"\] == "broken"/assert body["status"] == "healthy"/' "$ROOT/tests/test_app.py"
+    rm -f "$ROOT/tests/test_app.py.bak"
+    echo "tests/test_app.py fixed. Commit and push to deploy again."
     ;;
   break-health)
     gh workflow run cicd-pipeline.yml -f break_health=true
