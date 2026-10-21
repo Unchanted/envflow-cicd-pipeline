@@ -26,7 +26,7 @@ def test_health_endpoint_json(client):
     r = c.get("/health")
     body = r.get_json()
     assert r.status_code == 200
-    assert body["status"] == "broken"
+    assert body["status"] == "healthy"
     assert body["environment"] == "staging"
     assert body["version"] == "abc1234"
     assert "timestamp" in body
