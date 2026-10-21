@@ -322,7 +322,27 @@ figure img { max-width: 100%; }
   <tr><td>6b</td><td><code>demo_helper.sh break-health</code></td><td>deploy-dev is red, the last good SHA is restored, Staging and Production are not touched</td></tr>
 </table>
 <div class="tcap">Table 9: Demonstration checklist</div>
-<h2>9.1 Success criteria</h2>
+<h2>9.1 Evidence from the dry run</h2>
+<p>The screenshots below are from real runs of the pipeline on the self-hosted runner. They follow the checklist in Table 9.</p>
+<figure><img src="../screenshots/run-waiting-approval.png" style="max-height:60mm;border:1px solid #e5e7eb;border-radius:1.5mm"></figure>
+<div class="cap">Figure 11: Development and Staging passed. Production waits for the required reviewer</div>
+<figure><img src="../screenshots/run-success.png" style="max-height:75mm;border:1px solid #e5e7eb;border-radius:1.5mm"></figure>
+<div class="cap">Figure 12: After approval, all five jobs are green and each environment links to its URL</div>
+<div class="grid3">
+  <div><img src="../screenshots/live-development.png">Development · :8081</div>
+  <div><img src="../screenshots/live-staging.png">Staging · :8082</div>
+  <div><img src="../screenshots/live-production.png">Production · :8083</div>
+</div>
+<div class="cap">Figure 13: The three live environments behind Nginx, all running image 04222fa</div>
+<figure><img src="../screenshots/live-status.png" style="max-height:40mm;border-radius:1.5mm"></figure>
+<div class="cap">Figure 14: demo_helper.sh status. All three /health endpoints report healthy with the same version</div>
+<figure><img src="../screenshots/run-test-failed.png" style="max-height:120mm;border-radius:1.5mm"></figure>
+<div class="cap">Figure 15: Failure demo 1. A broken assertion fails the test job (1 failed, 7 passed), so build and all deploy jobs are skipped</div>
+<figure><img src="../screenshots/run-health-failed.png" style="max-height:55mm;border:1px solid #e5e7eb;border-radius:1.5mm"></figure>
+<div class="cap">Figure 16: Failure demo 2. The Development deploy fails, so Staging and Production are skipped</div>
+<figure><img src="../screenshots/run-health-log.png" style="max-height:120mm;border-radius:1.5mm"></figure>
+<div class="cap">Figure 17: deploy.sh log for failure demo 2. /health returns 503, the check fails, the last good image 797de42 is restored and passes its own check</div>
+<h2>9.2 Success criteria</h2>
 <table>
   <tr><th style="width:36%">Criterion</th><th>How EnvFlow meets it</th></tr>
   <tr><td>Runs automatically or manually</td><td><code>push</code>, <code>pull_request</code> and <code>workflow_dispatch</code> triggers</td></tr>
@@ -333,7 +353,7 @@ figure img { max-width: 100%; }
   <tr><td>Production is controlled and traceable</td><td>A required reviewer, a main-only branch rule, the GitHub deployment history and the SHA tags</td></tr>
 </table>
 <div class="tcap">Table 10: Success criteria</div>
-<h2>9.2 Limitations</h2>
+<h2>9.3 Limitations</h2>
 <p>All three environments share one host and the local Docker engine, and no registry is used. Recovery restarts the containers, so there is a short downtime. The in-memory store resets on each deploy, which is acceptable for a stateless demo app.</p>
 
 <h1>10. Conclusion and future work</h1>
