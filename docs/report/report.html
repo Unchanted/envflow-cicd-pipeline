@@ -303,8 +303,12 @@ figure img { max-width: 100%; }
   <li>Register a self-hosted runner from Settings → Actions → Runners, then start it with <code>./run.sh</code>.</li>
   <li>Run <code>git push -u origin main</code>. The first pipeline run starts.</li>
 </ol>
+<figure><img src="../screenshots/setup-runner-page.png" style="max-height:120mm;border:1px solid #e5e7eb;border-radius:1.5mm"></figure>
+<div class="cap">Figure 8: Registering a macOS ARM64 self-hosted runner for Unchanted/envflow-cicd-pipeline (registration token hidden)</div>
+<figure><img src="../screenshots/setup-runner-config.png" style="max-height:120mm;border-radius:1.5mm"></figure>
+<div class="cap">Figure 9: Runner configured with the labels self-hosted, macOS and ARM64, then started with ./run.sh and listening for jobs</div>
 <figure><img src="../diagrams/05-sequence.svg" style="max-height:92mm"></figure>
-<div class="cap">Figure 7: Sequence of one release from push to production</div>
+<div class="cap">Figure 10: Sequence of one release from push to production</div>
 
 <h1>9. Demonstration and results</h1>
 <table>
