@@ -1,0 +1,20 @@
+flowchart TB
+  dev([Developer]):::person -->|git push / PR| gh[(GitHub repository)]
+  gh -->|event| t
+  subgraph gha[GitHub Actions workflow]
+    direction LR
+    t[Validate<br/>pytest + coverage ≥ 85%]:::cloud --> b[Build<br/>envflow-app:SHA<br/>envflow-nginx:SHA]:::job
+  end
+  b -->|same image tag| d1
+  subgraph mac[Self-hosted runner · Mac with OrbStack Docker]
+    direction LR
+    d1[Development<br/>:8081]:::dev --> d2[Staging<br/>:8082]:::stg --> gate{{Manual approval}}:::gate --> d3[Production<br/>:8083]:::prd
+  end
+  mac -.->|after every deploy| v[Smoke test via Nginx<br/>HTTP 200 · status healthy · version = SHA · Server: nginx]:::job
+  classDef person fill:#1f2937,color:#fff,stroke:#1f2937
+  classDef cloud fill:#eef2ff,stroke:#4f46e5
+  classDef job fill:#fdf2f4,stroke:#9b1c31
+  classDef dev fill:#dbeafe,stroke:#2563eb
+  classDef stg fill:#fef3c7,stroke:#d97706
+  classDef prd fill:#dcfce7,stroke:#16a34a
+  classDef gate fill:#9b1c31,color:#fff,stroke:#9b1c31

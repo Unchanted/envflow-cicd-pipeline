@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EnvFlow · {{ env.label }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="--env: {{ env.color }}">
+  <header class="banner">
+    <div class="wrap">
+      <span class="pill">{{ env.label }}</span>
+      <span class="sha">image <code>{{ version }}</code></span>
+    </div>
+  </header>
+  <main class="wrap">
+    <h1>EnvFlow release checklist</h1>
+    <p class="sub">Served by Gunicorn behind Nginx. Health probe at <a href="/health">/health</a>.</p>
+    <form method="post" action="/add" class="add">
+      <input name="task" maxlength="120" placeholder="Add a release check, e.g. verify /health on staging" autocomplete="off">
+      <button type="submit">Add</button>
+    </form>
+    {% if tasks %}
+    <ul class="tasks">
+      {% for t in tasks %}
+      <li>
+        <div><strong>{{ t.text }}</strong><small>{{ t.id }} · {{ t.created }}</small></div>
+        <form method="post" action="/delete/{{ t.id }}"><button class="del" aria-label="Delete">✕</button></form>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">No release checks yet. This store is in memory and resets on every deploy.</p>
+    {% endif %}
+  </main>
+</body>
+</html>

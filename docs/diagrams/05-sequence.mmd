@@ -1,0 +1,22 @@
+sequenceDiagram
+  autonumber
+  actor Dev as Developer
+  participant GH as GitHub
+  participant CI as Actions (ubuntu-latest)
+  participant R as Self-hosted runner
+  participant E as Dev / Staging / Prod
+  actor Rev as Reviewer
+  Dev->>GH: git push main
+  GH->>CI: start workflow
+  CI->>CI: pytest + coverage gate
+  CI-->>R: test passed
+  R->>R: docker build envflow-app:SHA, envflow-nginx:SHA
+  R->>E: deploy.sh development 8081 SHA
+  E-->>R: /health 200, version = SHA
+  R->>E: deploy.sh staging 8082 SHA
+  E-->>R: /health 200, version = SHA
+  R->>Rev: production waiting for approval
+  Rev->>R: approve
+  R->>E: deploy.sh production 8083 SHA
+  E-->>R: /health 200, version = SHA
+  R-->>GH: run green, environment URLs recorded

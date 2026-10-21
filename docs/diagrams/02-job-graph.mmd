@@ -1,0 +1,15 @@
+flowchart TB
+  trig{{push · pull_request<br/>workflow_dispatch}}:::gate --> test
+  test[test<br/><small>ubuntu-latest</small>]:::cloud --> build[build<br/><small>self-hosted</small>]:::job
+  build -->|not a PR| dd[deploy-dev<br/>env: development]:::dev
+  dd -->|branch = main| ds[deploy-staging<br/>env: staging]:::stg
+  ds --> ap{{required reviewer}}:::gate --> dp[deploy-production<br/>env: production]:::prd
+  test -. fails .-> stop1[[Pipeline stops<br/>nothing deployed]]:::bad
+  dd -. health fails .-> stop2[[Restore last good image<br/>staging + prod untouched]]:::bad
+  classDef cloud fill:#eef2ff,stroke:#4f46e5
+  classDef job fill:#fdf2f4,stroke:#9b1c31
+  classDef dev fill:#dbeafe,stroke:#2563eb
+  classDef stg fill:#fef3c7,stroke:#d97706
+  classDef prd fill:#dcfce7,stroke:#16a34a
+  classDef gate fill:#9b1c31,color:#fff,stroke:#9b1c31
+  classDef bad fill:#fee2e2,stroke:#dc2626,color:#7f1d1d

@@ -1,0 +1,14 @@
+flowchart LR
+  c([Client]):::person --> ng{Nginx<br/>location match}:::gate
+  ng -->|/static/*| st[Served from disk<br/>/usr/share/nginx/html]:::job
+  ng -->|/ · /add · /delete/:id · /health| up[upstream envflow_app<br/>app:5000]:::cloud
+  up --> r1[GET / → dashboard HTML]:::dev
+  up --> r2[POST /add → 302 to /]:::dev
+  up --> r3[POST /delete/:id → 302 to /]:::dev
+  up --> r4[GET /health → JSON 200 / 503]:::prd
+  classDef person fill:#1f2937,color:#fff,stroke:#1f2937
+  classDef job fill:#fdf2f4,stroke:#9b1c31
+  classDef cloud fill:#eef2ff,stroke:#4f46e5
+  classDef dev fill:#dbeafe,stroke:#2563eb
+  classDef prd fill:#dcfce7,stroke:#16a34a
+  classDef gate fill:#9b1c31,color:#fff,stroke:#9b1c31

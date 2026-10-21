@@ -1,0 +1,95 @@
+name: EnvFlow CI/CD
+
+on:
+  push:
+    branches: [main, dev, "feature/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      break_health:
+        description: "Demo: make the new Development container report unhealthy"
+        type: boolean
+        default: false
+
+env:
+  HEALTHCHECK_TIMEOUT: ${{ vars.HEALTHCHECK_TIMEOUT || 30 }}
+
+concurrency:
+  group: envflow-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: "Validate: tests + coverage"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: pytest
+
+  build:
+    name: "Build: SHA-tagged images"
+    needs: test
+    runs-on: self-hosted
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: echo "tag=${GITHUB_SHA:0:7}" >> "$GITHUB_OUTPUT"
+      - name: Build app image
+        run: docker build --build-arg GIT_SHA=${{ steps.tag.outputs.tag }} -t envflow-app:${{ steps.tag.outputs.tag }} .
+      - name: Build nginx image
+        run: docker build -f nginx/Dockerfile -t envflow-nginx:${{ steps.tag.outputs.tag }} .
+      - run: docker images --filter "reference=envflow-*:${{ steps.tag.outputs.tag }}"
+
+  deploy-dev:
+    name: "Deploy: Development :8081"
+    needs: build
+    if: github.event_name != 'pull_request'
+    runs-on: self-hosted
+    environment:
+      name: development
+      url: http://localhost:8081
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy and verify
+        env:
+          APP_SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}
+          BREAK_HEALTH: ${{ inputs.break_health && '1' || '0' }}
+        run: ./scripts/deploy.sh development 8081 ${{ needs.build.outputs.tag }}
+
+  deploy-staging:
+    name: "Deploy: Staging :8082"
+    needs: [build, deploy-dev]
+    if: github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    environment:
+      name: staging
+      url: http://localhost:8082
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy and verify
+        env:
+          APP_SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}
+        run: ./scripts/deploy.sh staging 8082 ${{ needs.build.outputs.tag }}
+
+  deploy-production:
+    name: "Deploy: Production :8083"
+    needs: [build, deploy-staging]
+    if: github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    environment:
+      name: production
+      url: http://localhost:8083
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy and verify
+        env:
+          APP_SECRET_KEY: ${{ secrets.APP_SECRET_KEY }}
+        run: ./scripts/deploy.sh production 8083 ${{ needs.build.outputs.tag }}

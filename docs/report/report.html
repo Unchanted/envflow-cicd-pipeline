@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EnvFlow Project Report</title>
+<style>
+@page { size: A4; margin: 22mm 20mm 22mm 20mm; }
+@page :first { margin: 0; }
+:root { --brand: #9b1c31; --ink: #1f2937; --muted: #6b7280; --line: #e5e7eb; --soft: #fdf2f4; }
+* { box-sizing: border-box; }
+body { font-family: "Inter", "Helvetica Neue", Arial, sans-serif; color: var(--ink); font-size: 10.6pt; line-height: 1.55; margin: 0; }
+h1 { font-family: Georgia, "Times New Roman", serif; color: var(--brand); font-size: 21pt; font-weight: 600; margin: 0 0 4mm; padding-bottom: 2.5mm; border-bottom: 1.5px solid var(--brand); page-break-before: always; }
+h2 { page-break-after: avoid; font-size: 12.5pt; color: var(--ink); margin: 6mm 0 2mm; }
+p { margin: 0 0 3mm; text-align: justify; }
+ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+li { margin-bottom: 1mm; }
+code { font-family: "JetBrains Mono", Menlo, Consolas, monospace; font-size: 9pt; background: #f3f4f6; padding: 0.3mm 1.2mm; border-radius: 1mm; }
+pre { font-family: "JetBrains Mono", Menlo, Consolas, monospace; font-size: 8.6pt; line-height: 1.45; background: #111827; color: #e5e7eb; padding: 4mm 5mm; border-radius: 2mm; margin: 0 0 4mm; white-space: pre-wrap; page-break-inside: avoid; }
+pre .c { color: #9ca3af; }
+pre .k { color: #f9a8d4; }
+pre .s { color: #86efac; }
+table { width: 100%; border-collapse: collapse; margin: 1mm 0 2mm; font-size: 9.3pt; page-break-inside: avoid; }
+th { background: var(--brand); color: #fff; text-align: left; font-weight: 600; padding: 2mm 2.5mm; }
+td { padding: 1.8mm 2.5mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:nth-child(even) td { background: #fafafa; }
+td code { white-space: nowrap; }
+.cap { font-size: 8.8pt; color: var(--muted); text-align: center; margin: 1.5mm 0 5mm; }
+.tcap { font-size: 8.8pt; color: var(--muted); margin: 3mm 0 0; font-weight: 600; }
+figure { margin: 3mm 0 0; text-align: center; page-break-inside: avoid; }
+figure img { max-width: 100%; }
+.callout { border-left: 3px solid var(--brand); background: var(--soft); padding: 3mm 4mm; margin: 2mm 0 4mm; border-radius: 0 2mm 2mm 0; page-break-inside: avoid; }
+.callout b { color: var(--brand); }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; margin: 3mm 0 0; }
+.grid3 img { width: 100%; border: 1px solid var(--line); border-radius: 1.5mm; }
+.grid3 div { font-size: 8.5pt; color: var(--muted); text-align: center; }
+
+.cover { height: 297mm; padding: 0; position: relative; display: flex; flex-direction: column; }
+.cover .band { background: var(--brand); color: #fff; padding: 30mm 22mm 18mm; }
+.cover .eyebrow { letter-spacing: .22em; font-size: 9pt; text-transform: uppercase; opacity: .85; }
+.cover .title { font-family: Georgia, serif; font-size: 46pt; line-height: 1; margin: 6mm 0 4mm; }
+.cover .subtitle { font-size: 15pt; opacity: .95; max-width: 150mm; line-height: 1.35; }
+.cover .body { padding: 16mm 22mm; flex: 1; display: flex; flex-direction: column; }
+.cover .label { font-size: 8.5pt; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 2mm; }
+.cover table { width: auto; font-size: 11pt; margin-bottom: 10mm; }
+.cover td { border: 0; padding: 1mm 10mm 1mm 0; background: none !important; }
+.cover .stack { display: flex; gap: 2.5mm; flex-wrap: wrap; margin-bottom: 10mm; }
+.cover .stack span { border: 1px solid var(--brand); color: var(--brand); border-radius: 10mm; padding: 1.2mm 4mm; font-size: 9.5pt; }
+.cover .foot { margin-top: auto; font-size: 10pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 4mm; }
+
+.toc { page-break-before: always; }
+.toc h1 { page-break-before: avoid; }
+.toc ol { list-style: none; padding: 0; }
+.toc li { display: flex; border-bottom: 1px dotted #d1d5db; padding: 1.6mm 0; margin: 0; }
+.toc li span:first-child { width: 10mm; color: var(--brand); font-weight: 600; }
+.toc .sub li { padding-left: 10mm; font-size: 9.5pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="band">
+    <div class="eyebrow">DevOps Lab Project · Detailed Project Report</div>
+    <div class="title">EnvFlow</div>
+    <div class="subtitle">An automated multi-environment CI/CD pipeline across Development, Staging and Production</div>
+  </div>
+  <div class="body">
+    <div class="label">Submitted by</div>
+    <table>
+      <tr><td>Om Anand Jha</td><td>16010123214</td></tr>
+      <tr><td>Om Dwivedi</td><td>16010123213</td></tr>
+      <tr><td>Paaras Kokate</td><td>16010123224</td></tr>
+    </table>
+    <div class="label">Technology</div>
+    <div class="stack"><span>GitHub Actions</span><span>GitHub Environments</span><span>Docker</span><span>Docker Compose</span><span>Nginx 1.26</span><span>Flask 3 + Gunicorn</span><span>pytest</span></div>
+    <div class="label">Repository</div>
+    <p style="font-size:11pt">github.com/__GH_OWNER__/envflow-cicd-pipeline</p>
+    <div class="foot">B.Tech Computer Engineering, Final Year · K.J. Somaiya School of Engineering, Somaiya Vidyavihar University · October 2026</div>
+  </div>
+</section>
+
+<section class="toc">
+  <h1>Contents</h1>
+  <ol>
+    <li><span>1</span><span>Introduction</span></li>
+    <li><span>2</span><span>Background and concepts</span></li>
+    <li><span>3</span><span>Technology stack</span></li>
+    <li><span>4</span><span>System architecture</span></li>
+    <li><span>5</span><span>Application and Nginx design</span></li>
+    <li><span>6</span><span>CI/CD pipeline implementation</span></li>
+    <li><span>7</span><span>Deployment, verification and recovery</span></li>
+    <li><span>8</span><span>Environment configuration and setup</span></li>
+    <li><span>9</span><span>Demonstration and results</span></li>
+    <li><span>10</span><span>Conclusion and future work</span></li>
+    <li><span></span><span>References</span></li>
+  </ol>
+  <h2 style="margin-top:10mm">Abstract</h2>
+  <p>Manual deployments are slow and repetitive, and they differ from one environment to the next. A change that has not been tested can reach users. EnvFlow solves this with a pipeline in GitHub Actions. On each push, the pipeline tests a small Flask web app, packages it as Docker images tagged with the Git commit SHA, and promotes those same images through Development, Staging and Production. Each environment is a separate Docker Compose stack, with Nginx as the reverse proxy in front of Gunicorn. After every deployment a smoke test sends a request through Nginx and checks the HTTP status, the health status, the deployed version and the server header. Production is protected by a GitHub Environment that has a required reviewer, so a person must approve each release. When a test fails, the pipeline stops before anything is deployed. When a new container fails its health check, the pipeline restores the last good image in that environment and stops the promotion.</p>
+  <p><b>Keywords:</b> CI/CD, GitHub Actions, GitHub Environments, Docker, Nginx, immutable artifacts, smoke testing, release approval.</p>
+</section>
+
+<h1>1. Introduction</h1>
+<h2>1.1 Background</h2>
+<p>Teams release small changes often. When people deploy by hand (log in to a server, pull the code, install packages, restart the process), every release is slower and less reliable than it should be. Small differences between the developer's machine and the server make an app that works locally fail after release.</p>
+<p>Continuous Integration and Continuous Deployment (CI/CD) automate these steps. When the app and its runtime are packaged into one Docker image, the same artifact can move through each test stage before it reaches users.</p>
+<h2>1.2 Problem statement</h2>
+<ul>
+  <li>Manual build and deploy commands take time, and people make mistakes when they run them.</li>
+  <li>Configuration drifts between Development, Staging and Production, which causes unexpected failures at runtime.</li>
+  <li>Without automated tests, health checks and approval gates, a broken commit can reach production.</li>
+</ul>
+<h2>1.3 Objectives</h2>
+<ol>
+  <li>Automate test, build and deployment with one GitHub Actions workflow.</li>
+  <li>Build Docker images once per commit and tag them with the commit SHA, so the tested image is the released image.</li>
+  <li>Run three isolated environments with clear purposes and separate triggers.</li>
+  <li>Put Nginx in front of the app as the HTTP entry point and static file server.</li>
+  <li>Verify every deployment automatically, and put production behind a manual approval.</li>
+</ol>
+<h2>1.4 Scope</h2>
+<p>The project is about the pipeline, not the app. EnvFlow is a deliberately small Flask app: a release checklist with an in-memory store, an environment banner and a JSON <code>/health</code> endpoint. The three environments run as Docker Compose stacks on one Mac through a self-hosted GitHub Actions runner and are published on ports 8081, 8082 and 8083. In a real company these would be separate servers. The pipeline logic stays the same, and only the deploy target changes.</p>
+
+<h1>2. Background and concepts</h1>
+<h2>2.1 Continuous integration and delivery</h2>
+<p>Continuous Integration builds and tests the code on every push or pull request, so regressions show up within minutes [1]. Continuous Delivery and Deployment take the validated build, package it and move it through further environments with a repeatable, version-controlled process [7].</p>
+<h2>2.2 Build once, promote many</h2>
+<p>If each environment builds its own copy, the base images or dependencies can change between builds, and staging no longer proves anything about production. EnvFlow builds <code>envflow-app:&lt;sha&gt;</code> and <code>envflow-nginx:&lt;sha&gt;</code> once in the <code>build</code> job. Every deploy job then runs those exact tags. Only runtime variables such as <code>APP_ENV</code> and the host port differ between environments [3].</p>
+<h2>2.3 Three environment strategy</h2>
+<table>
+  <tr><th style="width:18%">Environment</th><th style="width:24%">Purpose</th><th>Trigger</th><th>Checks</th></tr>
+  <tr><td>Development</td><td>Fast feedback</td><td>Push to <code>main</code>, <code>dev</code> or <code>feature/**</code></td><td>Unit tests, build, smoke test on :8081</td></tr>
+  <tr><td>Staging</td><td>Production-like validation</td><td>Push to <code>main</code> after Development passes</td><td>Same image, smoke test on :8082</td></tr>
+  <tr><td>Production</td><td>Serves end users</td><td>After Staging passes and a reviewer approves</td><td>Required reviewer, smoke test on :8083, last good image kept</td></tr>
+</table>
+<div class="tcap">Table 1: Environment strategy</div>
+<h2>2.4 Reverse proxy</h2>
+<p>A Python WSGI server should not take traffic directly. Nginx accepts the connection, serves <code>/static/*</code> from disk, adds security headers and forwards dynamic requests to Gunicorn on the internal Docker network [4].</p>
+<h2>2.5 Release governance</h2>
+<p>GitHub Environments add rules on top of a workflow: secrets per environment, branch restrictions and required reviewers [2]. A job that names the <code>production</code> environment pauses until an approved reviewer clicks Approve. If a job is only called "production" and has no environment rule, nothing protects it. The rule is what makes the gate real.</p>
+
+<h1>3. Technology stack</h1>
+<table>
+  <tr><th style="width:28%">Technology</th><th>Role in EnvFlow</th></tr>
+  <tr><td>Git and GitHub</td><td>Version control, branches, pull requests, source hosting</td></tr>
+  <tr><td>GitHub Actions</td><td>Runs the five-job workflow defined in <code>.github/workflows/cicd-pipeline.yml</code></td></tr>
+  <tr><td>GitHub Environments</td><td>development, staging and production, with scoped <code>APP_SECRET_KEY</code> and a required reviewer on production</td></tr>
+  <tr><td>Self-hosted runner (macOS)</td><td>Runs the build and deploy jobs on the machine that hosts the three environments</td></tr>
+  <tr><td>Docker (OrbStack) and Compose</td><td>Builds the images, then runs one isolated stack per environment</td></tr>
+  <tr><td>Nginx 1.26 Alpine</td><td>Reverse proxy, static files and security headers</td></tr>
+  <tr><td>Python 3.12, Flask 3.0.3, Gunicorn 22</td><td>Web app and production WSGI server</td></tr>
+  <tr><td>pytest 8 and pytest-cov 5</td><td>Eight test cases with an 85% coverage gate</td></tr>
+  <tr><td>Bash and curl</td><td><code>deploy.sh</code> and <code>smoke_test.sh</code> for deployment and verification</td></tr>
+</table>
+<div class="tcap">Table 2: Components and roles</div>
+<p style="margin-top:5mm">Only the <code>test</code> job runs on GitHub's hosted Ubuntu runner. The build and deploy jobs run on a self-hosted runner on the Mac, so the containers they start are real and can be opened in a browser during the demonstration. With a hosted runner, the containers would stop when the job ends.</p>
+
+<h1>4. System architecture</h1>
+<h2>4.1 End-to-end architecture</h2>
+<figure><img src="../diagrams/01-architecture.svg" style="max-height:118mm"></figure>
+<div class="cap">Figure 1: From a developer push to three verified environments</div>
+<h2>4.2 Job dependencies</h2>
+<p>The jobs are chained with <code>needs</code>. Staging cannot run until Development has passed, and Production cannot run until Staging has passed and a reviewer has approved. Pull requests run only <code>test</code> and <code>build</code>, so a PR is checked but never deployed.</p>
+<figure><img src="../diagrams/02-job-graph.svg" style="max-height:88mm"></figure>
+<div class="cap">Figure 2: Job graph and the two failure paths</div>
+<h2>4.3 Triggers</h2>
+<table>
+  <tr><th style="width:22%">Event</th><th style="width:26%">Scope</th><th>Result</th></tr>
+  <tr><td><code>push</code></td><td><code>dev</code>, <code>feature/**</code></td><td>test → build → Development</td></tr>
+  <tr><td><code>push</code></td><td><code>main</code></td><td>test → build → Development → Staging → approval → Production</td></tr>
+  <tr><td><code>pull_request</code></td><td>into <code>main</code></td><td>test → build only</td></tr>
+  <tr><td><code>workflow_dispatch</code></td><td>Actions tab or <code>gh workflow run</code></td><td>Manual run. The <code>break_health</code> input is used to demonstrate a failed health check</td></tr>
+</table>
+<div class="tcap">Table 3: Pipeline triggers</div>
+<h2>4.4 Repository structure</h2>
+<pre>envflow-cicd-pipeline/
+├── app.py                          <span class="c">Flask app and /health</span>
+├── templates/index.html            <span class="c">environment aware dashboard</span>
+├── static/style.css                <span class="c">served by Nginx</span>
+├── tests/test_app.py               <span class="c">8 pytest cases</span>
+├── requirements.txt, pytest.ini    <span class="c">pinned deps, 85% coverage gate</span>
+├── Dockerfile                      <span class="c">app image</span>
+├── nginx/Dockerfile, nginx.conf    <span class="c">proxy image</span>
+├── docker-compose.yml              <span class="c">one stack, parameterised per environment</span>
+├── .github/workflows/cicd-pipeline.yml
+├── scripts/
+│   ├── deploy.sh                   <span class="c">deploy, verify, record or restore</span>
+│   ├── smoke_test.sh               <span class="c">post-deploy verification</span>
+│   ├── setup_github.sh             <span class="c">repo, environments, reviewer, secrets</span>
+│   └── demo_helper.sh              <span class="c">demonstration shortcuts</span>
+└── docs/                           <span class="c">diagrams, screenshots, this report</span></pre>
+
+<h1>5. Application and Nginx design</h1>
+<h2>5.1 Features</h2>
+<ul>
+  <li><b>Environment banner.</b> The banner shows the tier name and the deployed SHA, in blue for Development, amber for Staging and green for Production.</li>
+  <li><b>Release checklist.</b> Users can add and delete checks. The store is in memory, so it resets on each deploy, which is intended for a stateless container.</li>
+  <li><b>Input validation.</b> Empty, whitespace-only and over-length (more than 120 characters) entries are rejected.</li>
+  <li><b>Health endpoint.</b> <code>GET /health</code> returns status, environment, version, uptime and timestamp as JSON.</li>
+</ul>
+<div class="grid3">
+  <div><img src="../screenshots/app-development.png">Development · :8081</div>
+  <div><img src="../screenshots/app-staging.png">Staging · :8082</div>
+  <div><img src="../screenshots/app-production.png">Production · :8083</div>
+</div>
+<div class="cap">Figure 3: The same image in three environments. Only <code>APP_ENV</code> differs.</div>
+<h2>5.2 Routes</h2>
+<table>
+  <tr><th style="width:12%">Method</th><th style="width:22%">Route</th><th>Behaviour</th></tr>
+  <tr><td>GET</td><td><code>/</code></td><td>Renders the dashboard with the environment banner, the SHA and the task list</td></tr>
+  <tr><td>POST</td><td><code>/add</code></td><td>Validates the text, adds the task with an 8-character id and a UTC time, then redirects with 302 to /</td></tr>
+  <tr><td>POST</td><td><code>/delete/&lt;id&gt;</code></td><td>Removes the matching task. An unknown id does nothing. Redirects with 302</td></tr>
+  <tr><td>GET</td><td><code>/health</code></td><td>Returns 200 with healthy, or 503 with unhealthy when <code>BREAK_HEALTH=1</code></td></tr>
+</table>
+<div class="tcap">Table 4: Routes</div>
+<h2>5.3 Nginx routing</h2>
+<figure><img src="../diagrams/04-routing.svg" style="max-height:56mm"></figure>
+<div class="cap">Figure 4: Nginx serves static files itself and forwards everything else to Gunicorn</div>
+
+<h1>6. CI/CD pipeline implementation</h1>
+<h2>6.1 Stages</h2>
+<table>
+  <tr><th style="width:17%">Stage</th><th style="width:18%">Job / runner</th><th>What happens</th></tr>
+  <tr><td>1 Trigger</td><td>workflow</td><td><code>push</code>, <code>pull_request</code> or <code>workflow_dispatch</code> starts the run. <code>concurrency</code> stops two runs on the same branch from deploying at the same time</td></tr>
+  <tr><td>2 Checkout</td><td>every job</td><td><code>actions/checkout@v4</code></td></tr>
+  <tr><td>3 Validate</td><td>test · ubuntu-latest</td><td>Python 3.12 with a pip cache, installs the requirements, then <code>pytest</code> with <code>--cov-fail-under=85</code></td></tr>
+  <tr><td>4 Build</td><td>build · self-hosted</td><td>Builds <code>envflow-app:&lt;sha7&gt;</code> and <code>envflow-nginx:&lt;sha7&gt;</code> and exports the tag as a job output</td></tr>
+  <tr><td>5 Deploy</td><td>deploy-* · self-hosted</td><td><code>scripts/deploy.sh &lt;env&gt; &lt;port&gt; &lt;sha7&gt;</code> for each environment in order</td></tr>
+  <tr><td>6 Verify</td><td>inside deploy.sh</td><td><code>smoke_test.sh</code> checks the new container through Nginx</td></tr>
+</table>
+<div class="tcap">Table 5: Six stages mapped to jobs</div>
+<h2>6.2 Workflow excerpt</h2>
+<pre><span class="k">build</span>:
+  needs: test
+  runs-on: self-hosted
+  outputs: { tag: ${{ steps.tag.outputs.tag }} }
+  steps:
+    - uses: actions/checkout@v4
+    - id: tag
+      run: echo "tag=${GITHUB_SHA:0:7}" &gt;&gt; "$GITHUB_OUTPUT"
+    - run: docker build --build-arg GIT_SHA=${{ steps.tag.outputs.tag }} -t envflow-app:${{ steps.tag.outputs.tag }} .
+    - run: docker build -f nginx/Dockerfile -t envflow-nginx:${{ steps.tag.outputs.tag }} .
+
+<span class="k">deploy-production</span>:
+  needs: [build, deploy-staging]
+  if: github.ref == 'refs/heads/main'
+  runs-on: self-hosted
+  environment: { name: production, url: http://localhost:8083 }   <span class="c"># required reviewer pauses here</span>
+  steps:
+    - uses: actions/checkout@v4
+    - run: ./scripts/deploy.sh production 8083 ${{ needs.build.outputs.tag }}
+      env: { APP_SECRET_KEY: ${{ secrets.APP_SECRET_KEY }} }</pre>
+<h2>6.3 Test suite</h2>
+<table>
+  <tr><th style="width:9%">ID</th><th style="width:40%">Test</th><th>Expected result</th></tr>
+  <tr><td>TC-01</td><td><code>test_index_page_renders</code></td><td>200, page shows the environment and the SHA</td></tr>
+  <tr><td>TC-02</td><td><code>test_health_endpoint_json</code></td><td>200, status healthy, environment and version correct</td></tr>
+  <tr><td>TC-03</td><td><code>test_add_valid_task</code></td><td>302, task added at the top of the list</td></tr>
+  <tr><td>TC-04</td><td><code>test_add_empty_task_rejected</code></td><td>302, store unchanged</td></tr>
+  <tr><td>TC-05</td><td><code>test_add_oversized_task_rejected</code></td><td>Store unchanged</td></tr>
+  <tr><td>TC-06</td><td><code>test_delete_existing_task</code></td><td>302, task removed</td></tr>
+  <tr><td>TC-07</td><td><code>test_delete_invalid_id_noop</code></td><td>302, no error, store unchanged</td></tr>
+  <tr><td>TC-08</td><td><code>test_health_reports_unhealthy_when_broken</code></td><td>503, status unhealthy</td></tr>
+</table>
+<div class="tcap">Table 6: Test cases. Result: 8 passed, 97% line coverage</div>
+
+<h1>7. Deployment, verification and recovery</h1>
+<h2>7.1 Containers</h2>
+<table>
+  <tr><th style="width:42%">Dockerfile instruction</th><th>Effect</th></tr>
+  <tr><td><code>FROM python:3.12-slim</code></td><td>Small Debian base image</td></tr>
+  <tr><td><code>ARG GIT_SHA</code> → <code>ENV APP_VERSION</code></td><td>Puts the commit SHA into the image, and <code>/health</code> reports it</td></tr>
+  <tr><td><code>RUN pip install Flask gunicorn</code></td><td>Runtime dependencies only. Test tools stay out of the image</td></tr>
+  <tr><td><code>COPY app.py templates static</code></td><td>Copies only what the app needs at runtime</td></tr>
+  <tr><td><code>USER envflow</code></td><td>Runs as a non-root user</td></tr>
+  <tr><td><code>CMD gunicorn -w 2 -b 0.0.0.0:5000</code></td><td>Production WSGI server</td></tr>
+</table>
+<div class="tcap">Table 7: App image</div>
+<p style="margin-top:4mm">The Nginx image is <code>nginx:1.26-alpine</code> with <code>nginx.conf</code> and the static folder copied in, so the proxy is versioned with the same SHA. A single <code>docker-compose.yml</code> describes the stack. The compose project name is <code>envflow-${APP_ENV}</code>, so each environment gets its own containers and its own network. Inside each network the app is always reachable as <code>app:5000</code>.</p>
+<figure><img src="../diagrams/03-runtime.svg" style="max-height:72mm"></figure>
+<div class="cap">Figure 5: Three isolated compose projects on one Docker host</div>
+<h2>7.2 Verification</h2>
+<p><code>smoke_test.sh &lt;url&gt; &lt;sha&gt;</code> polls <code>/health</code> for up to <code>HEALTHCHECK_TIMEOUT</code> seconds. It then checks four things: HTTP 200, <code>"status": "healthy"</code>, <code>"version"</code> equal to the expected SHA, and a <code>Server: nginx</code> header on <code>/</code>. The version check proves that the container serving traffic is the one this run deployed, not an older one.</p>
+<h2>7.3 Deploy logic and recovery</h2>
+<figure><img src="../diagrams/06-deploy-logic.svg" style="max-height:88mm"></figure>
+<div class="cap">Figure 6: deploy.sh flow</div>
+<p>On success, the SHA is written to <code>~/.envflow/&lt;env&gt;.last_good</code>. On failure, the script prints the app logs, starts the last good SHA again and verifies it, and then exits with code 1. The job turns red and the next environments are skipped. This is a simple recovery step for one host. It is not a blue-green deployment, so the environment is unavailable for a few seconds while the containers restart.</p>
+
+<h1>8. Environment configuration and setup</h1>
+<table>
+  <tr><th style="width:26%">Name</th><th style="width:24%">Scope</th><th style="width:18%">Value</th><th>Purpose</th></tr>
+  <tr><td><code>APP_SECRET_KEY</code></td><td>Environment secret (all 3)</td><td>random, per environment</td><td>Flask signing key, never in the repo</td></tr>
+  <tr><td><code>HEALTHCHECK_TIMEOUT</code></td><td>Repository variable</td><td>30</td><td>Max wait for <code>/health</code></td></tr>
+  <tr><td><code>APP_ENV</code></td><td>Set by deploy.sh</td><td>development / staging / production</td><td>Banner and <code>/health</code></td></tr>
+  <tr><td><code>HOST_PORT</code></td><td>Set by deploy.sh</td><td>8081 / 8082 / 8083</td><td>Published Nginx port</td></tr>
+  <tr><td><code>IMAGE_TAG</code></td><td>build job output</td><td>commit SHA (7)</td><td>Image used by every environment</td></tr>
+  <tr><td>Required reviewer</td><td>production environment</td><td>repo owner</td><td>Manual approval gate</td></tr>
+  <tr><td>Branch policy</td><td>production environment</td><td><code>main</code></td><td>Only main may deploy to production</td></tr>
+</table>
+<div class="tcap">Table 8: Configuration and secrets</div>
+<h2>8.1 Setup steps</h2>
+<ol>
+  <li>Start OrbStack, which provides the Docker engine and <code>docker compose</code> on macOS.</li>
+  <li>Run <code>./scripts/setup_github.sh</code>. It uses the GitHub CLI to create the repository, the three environments, the production reviewer and branch rule, and the secrets.</li>
+  <li>Register a self-hosted runner from Settings → Actions → Runners, then start it with <code>./run.sh</code>.</li>
+  <li>Run <code>git push -u origin main</code>. The first pipeline run starts.</li>
+</ol>
+<figure><img src="../diagrams/05-sequence.svg" style="max-height:92mm"></figure>
+<div class="cap">Figure 7: Sequence of one release from push to production</div>
+
+<h1>9. Demonstration and results</h1>
+<table>
+  <tr><th style="width:5%">#</th><th style="width:34%">Step</th><th>Evidence shown</th></tr>
+  <tr><td>1</td><td>Repository, Dockerfile, nginx.conf</td><td>Files on GitHub</td></tr>
+  <tr><td>2</td><td>Workflow triggers and <code>needs</code> chain</td><td><code>cicd-pipeline.yml</code> and the production environment rules</td></tr>
+  <tr><td>3</td><td>Push a banner change to <code>main</code></td><td>A new run appears in Actions</td></tr>
+  <tr><td>4</td><td>Job logs</td><td>8 tests passed, image tag, <code>Health check PASSED</code> for Development and Staging</td></tr>
+  <tr><td>5</td><td>Approve production, open the 3 URLs</td><td>Three banners with the same SHA, <code>Server: nginx</code> in <code>curl -I</code></td></tr>
+  <tr><td>6a</td><td><code>demo_helper.sh break-test</code> and push</td><td>The test job is red and all deploy jobs are skipped</td></tr>
+  <tr><td>6b</td><td><code>demo_helper.sh break-health</code></td><td>deploy-dev is red, the last good SHA is restored, Staging and Production are not touched</td></tr>
+</table>
+<div class="tcap">Table 9: Demonstration checklist</div>
+<h2>9.1 Success criteria</h2>
+<table>
+  <tr><th style="width:36%">Criterion</th><th>How EnvFlow meets it</th></tr>
+  <tr><td>Runs automatically or manually</td><td><code>push</code>, <code>pull_request</code> and <code>workflow_dispatch</code> triggers</td></tr>
+  <tr><td>Build and tests pass</td><td>8 of 8 tests pass at 97% coverage, and the gate fails the run below 85%</td></tr>
+  <tr><td>Correct image in each environment</td><td>One SHA tag is built and the same SHA appears in all three <code>/health</code> responses</td></tr>
+  <tr><td>Nginx serves the response</td><td>The smoke test requires a <code>Server: nginx</code> header</td></tr>
+  <tr><td>Health check confirms availability</td><td><code>Health check PASSED</code> in each deploy log</td></tr>
+  <tr><td>Production is controlled and traceable</td><td>A required reviewer, a main-only branch rule, the GitHub deployment history and the SHA tags</td></tr>
+</table>
+<div class="tcap">Table 10: Success criteria</div>
+<h2>9.2 Limitations</h2>
+<p>All three environments share one host and the local Docker engine, and no registry is used. Recovery restarts the containers, so there is a short downtime. The in-memory store resets on each deploy, which is acceptable for a stateless demo app.</p>
+
+<h1>10. Conclusion and future work</h1>
+<h2>10.1 Conclusion</h2>
+<p>EnvFlow replaces manual deployment with one versioned workflow. Each commit is tested, built once into SHA-tagged images and promoted through three isolated environments. Each step is verified through Nginx. Production gets the strongest control: it waits for a person to approve. Failures stop the pipeline early, and an environment never stays on a version that failed its checks. The project shows the core DevOps practices of automation, immutable artifacts, environment separation, verification and governed releases.</p>
+<h2>10.2 Future work</h2>
+<ul>
+  <li><b>Container registry.</b> Push signed images to GHCR so that separate servers can pull them.</li>
+  <li><b>Zero-downtime release.</b> Use blue-green or canary switching in Nginx instead of a restart.</li>
+  <li><b>HTTPS.</b> Terminate TLS in Nginx with Let's Encrypt certificates.</li>
+  <li><b>Monitoring.</b> Add Prometheus metrics, Grafana dashboards and central logs.</li>
+  <li><b>Security scanning.</b> Run a Trivy image scan as a gate before promotion.</li>
+  <li><b>Infrastructure as code.</b> Provision separate hosts with Terraform and Ansible.</li>
+</ul>
+
+<h1>References</h1>
+<ol style="font-size:9.5pt">
+  <li>M. Fowler, "Continuous Integration," martinfowler.com/articles/continuousIntegration.html</li>
+  <li>GitHub Docs, "Managing environments for deployment," docs.github.com/actions</li>
+  <li>Docker Docs, "Building best practices," docs.docker.com/build/building/best-practices</li>
+  <li>NGINX Docs, "NGINX Reverse Proxy," docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy</li>
+  <li>GitHub Docs, "About self-hosted runners," docs.github.com/actions/hosting-your-own-runners</li>
+  <li>Pallets, "Flask Documentation 3.0," flask.palletsprojects.com · Gunicorn Documentation, docs.gunicorn.org</li>
+  <li>J. Humble and D. Farley, <i>Continuous Delivery</i>, Addison-Wesley, 2010</li>
+</ol>
+
+</body>
+</html>

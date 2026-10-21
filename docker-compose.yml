@@ -1,0 +1,18 @@
+name: envflow-${APP_ENV:-development}
+
+services:
+  app:
+    image: envflow-app:${IMAGE_TAG:-local}
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      APP_SECRET_KEY: ${APP_SECRET_KEY:-dev-only-key}
+      BREAK_HEALTH: ${BREAK_HEALTH:-0}
+    restart: unless-stopped
+
+  nginx:
+    image: envflow-nginx:${IMAGE_TAG:-local}
+    depends_on:
+      - app
+    ports:
+      - "${HOST_PORT:-8081}:80"
+    restart: unless-stopped

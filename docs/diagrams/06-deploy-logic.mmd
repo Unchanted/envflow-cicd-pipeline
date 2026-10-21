@@ -1,0 +1,14 @@
+flowchart TB
+  s([deploy.sh ENV PORT SHA]):::gate --> up[docker compose up -d<br/>IMAGE_TAG = SHA]:::job
+  up --> sm([smoke_test.sh<br/>200 · healthy · version · nginx]):::cloud
+  sm -->|pass| ok[Save SHA as last good<br/>~/.envflow/ENV.last_good]:::prd
+  ok --> done([Job green · next environment runs]):::prd
+  sm -->|fail| logs[Print app container logs]:::bad
+  logs --> rb[Redeploy last good SHA<br/>and verify it]:::stg
+  rb --> fail([Job red · promotion stops]):::bad
+  classDef job fill:#fdf2f4,stroke:#9b1c31
+  classDef cloud fill:#eef2ff,stroke:#4f46e5
+  classDef stg fill:#fef3c7,stroke:#d97706
+  classDef prd fill:#dcfce7,stroke:#16a34a
+  classDef gate fill:#9b1c31,color:#fff,stroke:#9b1c31
+  classDef bad fill:#fee2e2,stroke:#dc2626,color:#7f1d1d

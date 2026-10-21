@@ -1,0 +1,20 @@
+flowchart LR
+  img[(One image pair per commit<br/>envflow-app:SHA · envflow-nginx:SHA)]:::img
+  browser([Browser / curl]):::person
+  subgraph D[compose project envflow-development]
+    n1[nginx:1.26-alpine<br/>host :8081 → 80]:::job --> a1[Gunicorn + Flask<br/>app:5000<br/>APP_ENV=development]:::dev
+  end
+  subgraph S[compose project envflow-staging]
+    n2[nginx<br/>host :8082 → 80]:::job --> a2[Gunicorn + Flask<br/>APP_ENV=staging]:::stg
+  end
+  subgraph P[compose project envflow-production]
+    n3[nginx<br/>host :8083 → 80]:::job --> a3[Gunicorn + Flask<br/>APP_ENV=production]:::prd
+  end
+  browser --> n1 & n2 & n3
+  img ~~~ browser
+  classDef person fill:#1f2937,color:#fff,stroke:#1f2937
+  classDef job fill:#fdf2f4,stroke:#9b1c31
+  classDef dev fill:#dbeafe,stroke:#2563eb
+  classDef stg fill:#fef3c7,stroke:#d97706
+  classDef prd fill:#dcfce7,stroke:#16a34a
+  classDef img fill:#f3f4f6,stroke:#6b7280

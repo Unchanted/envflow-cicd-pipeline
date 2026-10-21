@@ -1,0 +1,9 @@
+.git
+.github
+docs
+tests
+scripts
+__pycache__
+.pytest_cache
+.coverage
+*.md
